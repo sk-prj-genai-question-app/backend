@@ -20,6 +20,12 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4 # GitHub 리포지토리 코드를 워크플로우에 체크아웃
 
+      # gradlew 실행 권한 부여
+      # Git은 파일 권한을 항상 유지하지 않을 수 있으므로,
+      # gradlew 스크립트가 실행 가능하도록 권한을 명시적으로 부여합니다.
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew # gradlew 스크립트에 실행 권한 추가
+
       # JDK 17 설정
       - name: Set up JDK 17
         uses: actions/setup-java@v3 # Java 개발 환경 설정 액션 사용

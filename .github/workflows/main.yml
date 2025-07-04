@@ -2,14 +2,14 @@ name: Backend CI/CD Pipeline - Build and Push Docker Image
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # main 브랜치에 푸시될 때 실행
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
+    branches: [ "main" ] # main 브랜치로 풀 리퀘스트가 생성될 때 실행
+  workflow_dispatch: # 수동으로 워크플로우를 실행할 수 있도록 허용
 
 env:
-  DOCKER_IMAGE: backend
-  DOCKER_TAG: 0.1
+  DOCKER_IMAGE: backend # Docker 이미지 이름 정의
+  DOCKER_TAG: 0.1     # Docker 이미지 태그 정의 (초기 버전)
 
 jobs:
   build:
@@ -18,7 +18,7 @@ jobs:
     services:
       mariadb:
         image: mariadb:11
-        environment:
+        env:
           MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MARIADB_DATABASE: jlpt_question_db
           MARIADB_USER: ${{ secrets.MYSQL_USER }}
@@ -26,10 +26,11 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }}"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
 
     steps:
       # 소스 코드 체크아웃

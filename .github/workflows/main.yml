@@ -13,12 +13,12 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # 워크플로우를 실행할 운영체제 지정
+    runs-on: ubuntu-latest
 
     services:
       mariadb:
         image: mariadb:11
-        environment:
+        env:
           MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MARIADB_DATABASE: jlpt_question_db
           MARIADB_USER: ${{ secrets.MYSQL_USER }}
@@ -26,10 +26,11 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
+#          --health-cmd="mysqladmin ping -h 127.0.0.1 -u${{ secrets.MYSQL_USER }} -p${{ secrets.MYSQL_PASSWORD }}"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
 
     steps:
       # 소스 코드 체크아웃

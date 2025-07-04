@@ -15,6 +15,22 @@ jobs:
   build:
     runs-on: ubuntu-latest # 워크플로우를 실행할 운영체제 지정
 
+    services:
+      mariadb:
+        image: mariadb:11
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: jlpt_question_db
+          MYSQL_USER: boot
+          MYSQL_PASSWORD: boot
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
     steps:
       # 소스 코드 체크아웃
       - name: Checkout Code
@@ -45,6 +61,9 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Wait for MariaDB to be ready
+        run: sleep 15
 
       # Gradle 빌드 (테스트 포함)
       # Gradle Wrapper를 사용하여 프로젝트를 빌드하고, 테스트를 포함하여 실행합니다.

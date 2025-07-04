@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.auth.entity;
+package com.rookies3.genaiquestionapp.entity;
 
 
 import jakarta.persistence.*;

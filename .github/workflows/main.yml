@@ -13,12 +13,12 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # 워크플로우를 실행할 운영체제 지정
+    runs-on: ubuntu-latest
 
-    services:
-      mariadb:
+    services:  # <-- 'build' 잡(job)의 하위 속성
+      mariadb: # <-- 'services'의 하위 속성 (서비스 이름)
         image: mariadb:11
-        environment:
+        env: # <-- 'mariadb' 서비스의 하위 속성 (컨테이너 환경 변수)
           MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MARIADB_DATABASE: jlpt_question_db
           MARIADB_USER: ${{ secrets.MYSQL_USER }}

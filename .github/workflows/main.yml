@@ -19,10 +19,10 @@ jobs:
       mariadb:
         image: mariadb:10.11.8
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: jlpt_question_db
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MARIADB_DATABASE: jlpt_question_db
+          MARIADB_USER: ${{ secrets.MYSQL_USER }}
+          MARIADB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
         options: >-

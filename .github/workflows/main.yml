@@ -19,14 +19,14 @@ jobs:
       mariadb:
         image: mariadb:11
         environment:
-          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
+          MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MARIADB_DATABASE: jlpt_question_db
-          MARIADB_USER: ${{ secrets.MARIADB_USER }}
-          MARIADB_PASSWORD: ${{ secrets.MARIADB_USER_PASSWORD }}
+          MARIADB_USER: ${{ secrets.MYSQL_USER }}
+          MARIADB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -u ${{ secrets.MARIADB_USER }} -p${{ secrets.MARIADB_USER_PASSWORD }}"
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -u root -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5

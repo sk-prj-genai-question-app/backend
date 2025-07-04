@@ -6,7 +6,7 @@ FROM gradle:8.7-jdk17-alpine AS builder
 WORKDIR /app
 
 # 프로젝트의 모든 파일(소스 코드, build.gradle 등)을 컨테이너의 /app 디렉토리로 복사
-# .dockerignore 파일이 있다면, 해당 파일에 명시된 내용은 복사되지 않습니다.
+# dockerignore 파일이 있다면, 해당 파일에 명시된 내용은 복사되지 않습니다.
 COPY . .
 
 # Gradle을 사용하여 프로젝트 빌드
@@ -19,7 +19,7 @@ RUN gradle clean build -x test
 FROM openjdk:17-jdk-slim
 
 # Spring Boot 애플리케이션이 임시 파일을 저장할 수 있도록 /tmp 볼륨을 설정합니다.
-# 이는 컨테이너 재시작 시 임시 파일이 사라지도록 하여 컨테이너의 상태를 유지하지 않게 합니다.
+# 컨테이너 재시작 시 임시 파일이 사라지도록 하여 컨테이너의 상태를 유지하지 않게 합니다.
 VOLUME /tmp
 
 # 빌더 스테이지에서 생성된 JAR 파일을 최종 이미지로 복사합니다.

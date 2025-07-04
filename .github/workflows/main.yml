@@ -19,13 +19,10 @@ jobs:
       mariadb:
         image: mariadb:11
         env:
-          MARIADB_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MARIADB_ROOT_PASSWORD: root
           MARIADB_DATABASE: jlpt_question_db
-          MARIADB_USER: ${{ secrets.MYSQL_USER }}
-          MARIADB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uboot -pboot" --health-interval=10s --health-timeout=5s --health-retries=5
-
+          MARIADB_USER: boot
+          MARIADB_PASSWORD: boot
 
     steps:
       # 소스 코드 체크아웃

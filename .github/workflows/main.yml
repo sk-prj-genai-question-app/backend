@@ -15,6 +15,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      MYSQL_USER: boot
+      MYSQL_PASSWORD: boot
+
     services:
       mariadb:
         image: mariadb:11

@@ -60,7 +60,15 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Wait for MariaDB to be ready
-        run: sleep 15
+        run: |
+          for i in {1..30}; do
+            if mysqladmin ping -h 127.0.0.1 -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; then
+              echo "MariaDB is ready!"
+              break
+            fi
+            echo "Waiting for MariaDB..."
+            sleep 2
+          done
 
       # Gradle 빌드 (테스트 포함)
       # Gradle Wrapper를 사용하여 프로젝트를 빌드하고, 테스트를 포함하여 실행합니다.

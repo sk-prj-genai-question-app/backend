@@ -24,10 +24,7 @@ jobs:
           MARIADB_USER: ${{ secrets.MYSQL_USER }}
           MARIADB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1" \
-          --health-interval=10s \
-          --health-timeout=5s \
-          --health-retries=5
+          --health-cmd="mysqladmin ping -h 127.0.0.1" --health-interval=10s --health-timeout=5s --health-retries=5
 
 
     steps:

@@ -17,12 +17,12 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:latest
+        image: mariadb:11
         env:
-          MARIADB_ROOT_PASSWORD: ${{ secrets.MARIADB_ROOT_PASSWORD }}
-          MARIADB_DATABASE: jlpt_question_db
-          MARIADB_USER: ${{ secrets.MARIADB_USER }}
-          MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: jlpt_question_db
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
         options: >-

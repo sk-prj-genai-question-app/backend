@@ -2,10 +2,10 @@ name: Backend CI/CD Pipeline - Build and Push Docker Image
 
 on:
   push:
-    branches: [ "main" ] # main 브랜치에 푸시될 때 실행
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # main 브랜치로 풀 리퀘스트가 생성될 때 실행
-  workflow_dispatch: # 수동으로 워크플로우를 실행할 수 있도록 허용
+    branches: [ "main" ]
+  workflow_dispatch:
 
 env:
   DOCKER_IMAGE: backend
@@ -25,11 +25,6 @@ jobs:
           MARIADB_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
-        options: >-
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
 
     steps:
       # 소스 코드 체크아웃

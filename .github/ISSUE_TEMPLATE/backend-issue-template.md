@@ -1,6 +1,6 @@
 ---
 name: Backend Issue template
-about: 백엔드 커스 이슈 생성 템플릿입니다.
+about: 백엔드 커스텀 이슈 생성 템플릿입니다.
 title: "[TYPE] 간결하고 명확한 이슈 제목"
 labels: ''
 assignees: ''

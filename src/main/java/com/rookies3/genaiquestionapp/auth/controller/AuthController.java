@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -28,6 +30,13 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<LoginDto.Response> signin(@RequestBody LoginDto.Request request) {
         LoginDto.Response response = authService.login(request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginDto.Response> refreshAccessToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+        LoginDto.Response response = authService.refreshAccessToken(refreshToken);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

@@ -2,6 +2,7 @@ package com.rookies3.genaiquestionapp.auth.service;
 
 import com.rookies3.genaiquestionapp.auth.controller.dto.LoginDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.SignupDto;
+import com.rookies3.genaiquestionapp.auth.controller.dto.TokenDto;
 import com.rookies3.genaiquestionapp.auth.entity.CustomUserDetails;
 import com.rookies3.genaiquestionapp.auth.entity.RefreshToken;
 import com.rookies3.genaiquestionapp.auth.entity.User;
@@ -30,6 +31,8 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;
+    private final CustomUserDetailsService customUserDetailsService;
+
 
     // 회원가입
     public SignupDto.Response register(SignupDto.Request request) {
@@ -76,6 +79,30 @@ public class AuthService {
         return new LoginDto.Response(accessToken, refreshToken, "Bearer");
     }
 
+
+    public LoginDto.Response refreshAccessToken(String refreshToken) {
+
+        // 유효성 검사
+        if(!jwtTokenProvider.validateToken(refreshToken)){
+            throw new BusinessException(ErrorCode.AUTH_INVALID_TOKEN);
+        }
+
+        // 사용자가 보낸 refreshToken에서 email -> custoUserDetail에서 authorition 가져오기 위해
+        String email = jwtTokenProvider.getUsernameFromToken(refreshToken);
+        CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
+
+        // 이제 저장된 db RefreshToken과 비교
+        refreshTokenService.validateRefreshToken(userDetails.getId(), refreshToken);
+
+        String newAccessToken = jwtTokenProvider.generateAccessToken(userDetails);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        refreshTokenService.updateRefreshToken(userDetails.getId(), newRefreshToken, 7);
+
+        return new LoginDto.Response(newAccessToken, newRefreshToken, "Bearer");
+
+    }
+
     // util
     private boolean isEmailDuplicate(String email) {
         return userRepository.existsByEmail(email);
@@ -86,4 +113,6 @@ public class AuthService {
             throw new BusinessException(ErrorCode.AUTH_PASSWORD_NOT_EQUAL_ERROR);
         }
     }
+
+
 }

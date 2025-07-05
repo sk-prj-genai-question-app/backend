@@ -1,7 +1,6 @@
 package com.rookies3.genaiquestionapp.jwt;
 
 import com.rookies3.genaiquestionapp.auth.entity.CustomUserDetails;
-import com.rookies3.genaiquestionapp.auth.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;

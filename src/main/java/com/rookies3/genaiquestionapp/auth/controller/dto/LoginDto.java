@@ -3,6 +3,7 @@ package com.rookies3.genaiquestionapp.auth.controller.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 
 public class LoginDto {
 
@@ -12,7 +13,7 @@ public class LoginDto {
         private String password;
     }
 
-    @Getter
+    @Getter @Setter
     @AllArgsConstructor
     public static class Response {
         private String accessToken;

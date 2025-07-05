@@ -1,11 +1,14 @@
 package com.rookies3.genaiquestionapp.auth.controller;
 
+import com.rookies3.genaiquestionapp.auth.controller.dto.AccessTokenDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.LoginDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.SignupDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.TokenDto;
 import com.rookies3.genaiquestionapp.auth.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,9 +31,21 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<LoginDto.Response> signin(@RequestBody LoginDto.Request request) {
-        LoginDto.Response response = authService.login(request);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+    public ResponseEntity<AccessTokenDto.Response> signin(@RequestBody LoginDto.Request request, HttpServletResponse response) {
+        LoginDto.Response tokenResponse = authService.login(request);
+
+        // RefreshToken HttpOnly 쿠키 설정
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(7 * 24 * 60 * 60)
+                .build();
+
+        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new AccessTokenDto.Response(tokenResponse.getAccessToken()));
     }
 
     @PostMapping("/refresh")

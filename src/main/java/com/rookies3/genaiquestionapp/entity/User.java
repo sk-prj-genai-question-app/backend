@@ -1,6 +1,5 @@
 package com.rookies3.genaiquestionapp.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 

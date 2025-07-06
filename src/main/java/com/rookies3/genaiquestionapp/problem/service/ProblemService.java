@@ -1,7 +1,7 @@
 package com.rookies3.genaiquestionapp.problem.service;
 
 import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
-import com.rookies3.genaiquestionapp.record.dto.AnswerRecordDto;
+import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.problem.entity.Choice;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;

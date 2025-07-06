@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter // 해설 추가 시 필요
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder

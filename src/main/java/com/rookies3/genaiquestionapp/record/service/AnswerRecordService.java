@@ -1,6 +1,6 @@
 package com.rookies3.genaiquestionapp.record.service;
 
-import com.rookies3.genaiquestionapp.record.dto.AnswerRecordDto;
+import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.record.entity.AnswerRecord;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.auth.entity.User;

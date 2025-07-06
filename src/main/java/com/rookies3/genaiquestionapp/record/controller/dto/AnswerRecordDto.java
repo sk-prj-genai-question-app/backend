@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.record.dto;
+package com.rookies3.genaiquestionapp.record.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;

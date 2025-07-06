@@ -1,6 +1,6 @@
 package com.rookies3.genaiquestionapp.record.controller;
 
-import com.rookies3.genaiquestionapp.record.dto.AnswerRecordDto;
+import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.record.service.AnswerRecordService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

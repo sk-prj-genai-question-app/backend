@@ -12,7 +12,7 @@ import java.util.List;
 public class CustomError {
     private String code;
     private String message;
-    private List<ErrorDetail> details;
+    private List<com.rookies3.genaiquestionapp.exception.global.ErrorDetail> details;
     private String path;
     private String method;
 }

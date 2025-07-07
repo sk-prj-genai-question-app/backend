@@ -1,5 +1,6 @@
 package com.rookies3.genaiquestionapp.problem.entity;
 
+import com.rookies3.genaiquestionapp.problem.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -39,8 +40,17 @@ public class Problem extends BaseEntity {
     private Integer answerNumber;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Choice> choices = new ArrayList<>();
 
     @Column(name = "explanation", nullable = false, columnDefinition = "TEXT")
     private String explanation;
+
+    public void addChoice(Choice choice) {
+        if (this.choices == null) {
+            this.choices = new ArrayList<>(); // 혹시라도 초기화 안 된 경우 방어적 코드
+        }
+        this.choices.add(choice);
+        choice.setProblem(this); // Choice 엔티티에도 Problem 설정 (양방향 관계)
+    }
 }

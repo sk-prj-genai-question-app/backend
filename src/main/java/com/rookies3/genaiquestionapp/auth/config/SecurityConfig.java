@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.config;
+package com.rookies3.genaiquestionapp.auth.config;
 
 import com.rookies3.genaiquestionapp.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,6 @@
 package com.rookies3.genaiquestionapp.problem.entity;
 
+import com.rookies3.genaiquestionapp.problem.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +34,8 @@ public class Choice extends BaseEntity {
 
     @Column(name = "is_correct", nullable = false)
     private Boolean isCorrect;
+
+    public void setProblem(Problem problem) {
+        this.problem = problem;
+    }
 }

@@ -32,21 +32,17 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    private void setCookie(LoginDto.Response tokenResponse, HttpServletResponse response){
+
+    }
+
     // 로그인
     @PostMapping("/signin")
     public ResponseEntity<AccessTokenDto.Response> signin(@RequestBody LoginDto.Request request, HttpServletResponse response) {
         LoginDto.Response tokenResponse = authService.login(request);
 
         // RefreshToken HttpOnly 쿠키 설정, 7일
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenResponse.getRefreshToken())
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .path("/")
-                .maxAge(7 * 24 * 60 * 60)
-                .build();
-
-        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
+        response.setHeader("Set-Cookie", createRefreshTokenCookie(tokenResponse.getRefreshToken()).toString());
 
         return ResponseEntity.status(HttpStatus.OK).body(new AccessTokenDto.Response(tokenResponse.getAccessToken()));
     }
@@ -63,17 +59,21 @@ public class AuthController {
         LoginDto.Response tokenResponse = authService.refreshAccessToken(refreshToken);
 
         // 쿠키 재설정, 7일
-        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenResponse.getRefreshToken())
+        response.setHeader("Set-Cookie", createRefreshTokenCookie(tokenResponse.getRefreshToken()).toString());
+
+        // AccessToken 응답
+        return ResponseEntity.ok(new AccessTokenDto.Response(tokenResponse.getAccessToken()));
+    }
+
+    // util
+    private ResponseCookie createRefreshTokenCookie(String refreshToken) {
+        return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .secure(true)
                 .sameSite("None")
                 .path("/")
-                .maxAge(7 * 24 * 60 * 60)
+                .maxAge(7 * 24 * 60 * 60)  // 7일
                 .build();
-        response.setHeader("Set-Cookie", refreshTokenCookie.toString());
-
-        // AccessToken 응답
-        return ResponseEntity.ok(new AccessTokenDto.Response(tokenResponse.getAccessToken()));
     }
 
     // 확인

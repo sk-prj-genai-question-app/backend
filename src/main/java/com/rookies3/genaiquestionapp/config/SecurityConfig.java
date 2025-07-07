@@ -33,16 +33,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                // csrf 인증 비활성화 해 놓음. (나중에 지울 예정)
                 .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers
-                        .defaultsDisabled()
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
-                )
+                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .formLogin(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        // jwt 토큰 없이 접근 가능
                         .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh", "/auth/signout" ,"/h2-console/**").permitAll()
-                        .requestMatchers("/auth/me/information").authenticated()
                         // jwt 토큰이 없으면 접근 불가능
+                        .requestMatchers("/auth/me/information").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

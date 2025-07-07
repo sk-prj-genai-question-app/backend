@@ -12,6 +12,7 @@ import com.rookies3.genaiquestionapp.exception.BusinessException;
 import com.rookies3.genaiquestionapp.exception.ErrorCode;
 import com.rookies3.genaiquestionapp.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -82,16 +83,16 @@ public class AuthService {
 
     public LoginDto.Response refreshAccessToken(String refreshToken) {
 
-        // 유효성 검사
+        // 토큰 유효성 검사
         if(!jwtTokenProvider.validateToken(refreshToken)){
             throw new BusinessException(ErrorCode.AUTH_INVALID_TOKEN);
         }
 
-        // 사용자가 보낸 refreshToken에서 email -> custoUserDetail에서 authorition 가져오기 위해
+        // custoUserDetail에서 authorition 가져오기
         String email = jwtTokenProvider.getUsernameFromToken(refreshToken);
         CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(email);
 
-        // 이제 저장된 db RefreshToken과 비교
+        // 저장된 db token 비교
         refreshTokenService.validateRefreshToken(userDetails.getId(), refreshToken);
 
         String newAccessToken = jwtTokenProvider.generateAccessToken(userDetails);
@@ -100,7 +101,6 @@ public class AuthService {
         refreshTokenService.updateRefreshToken(userDetails.getId(), newRefreshToken, 7);
 
         return new LoginDto.Response(newAccessToken, newRefreshToken, "Bearer");
-
     }
 
     // util
@@ -113,6 +113,4 @@ public class AuthService {
             throw new BusinessException(ErrorCode.AUTH_PASSWORD_NOT_EQUAL_ERROR);
         }
     }
-
-
 }

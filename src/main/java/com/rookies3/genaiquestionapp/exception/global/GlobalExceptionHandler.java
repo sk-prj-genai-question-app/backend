@@ -161,6 +161,7 @@ public class GlobalExceptionHandler implements ResponseBodyAdvice<Object> {
 
         if (body instanceof ErrorResponse) return body;
         if (body instanceof SuccessResponse) return body;
+        if (body instanceof String) return body;
 
         // 기본적으로 HTTP 200으로 성공 응답 래핑
         return new SuccessResponse<>(

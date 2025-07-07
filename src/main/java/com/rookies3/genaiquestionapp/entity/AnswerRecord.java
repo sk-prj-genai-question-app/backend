@@ -33,6 +33,4 @@ public class AnswerRecord extends BaseEntity {
 
     @Column(name = "is_correct",nullable = false)
     private boolean isCorrect;
-
-
 }

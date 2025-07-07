@@ -1,6 +1,6 @@
 package com.rookies3.genaiquestionapp.problem.entity;
 
-import com.rookies3.genaiquestionapp.entity.BaseEntity;
+import com.rookies3.genaiquestionapp.problem.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

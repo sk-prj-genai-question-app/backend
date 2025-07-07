@@ -1,6 +1,6 @@
-package com.rookies3.genaiquestionapp.repository;
+package com.rookies3.genaiquestionapp.problem.repository;
 
-import com.rookies3.genaiquestionapp.entity.Problem;
+import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

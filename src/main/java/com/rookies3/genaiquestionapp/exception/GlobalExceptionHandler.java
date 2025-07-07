@@ -1,6 +1,6 @@
 package com.rookies3.genaiquestionapp.exception;
 
-import com.rookies3.genaiquestionapp.dto.ProblemDto;
+import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

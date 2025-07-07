@@ -1,6 +1,6 @@
-package com.rookies3.genaiquestionapp.repository;
+package com.rookies3.genaiquestionapp.problem.repository;
 
-import com.rookies3.genaiquestionapp.entity.Choice;
+import com.rookies3.genaiquestionapp.problem.entity.Choice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

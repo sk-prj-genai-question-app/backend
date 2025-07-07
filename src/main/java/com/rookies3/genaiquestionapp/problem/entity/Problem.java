@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.entity;
+package com.rookies3.genaiquestionapp.problem.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

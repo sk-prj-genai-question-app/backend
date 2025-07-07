@@ -1,7 +1,7 @@
-package com.rookies3.genaiquestionapp.controller;
+package com.rookies3.genaiquestionapp.problem.controller;
 
-import com.rookies3.genaiquestionapp.dto.ProblemDto;
-import com.rookies3.genaiquestionapp.service.ProblemService;
+import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
+import com.rookies3.genaiquestionapp.problem.service.ProblemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

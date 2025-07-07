@@ -1,6 +1,6 @@
-package com.rookies3.genaiquestionapp.dto;
+package com.rookies3.genaiquestionapp.problem.controller.dto;
 
-import com.rookies3.genaiquestionapp.entity.Choice;
+import com.rookies3.genaiquestionapp.problem.entity.Choice;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

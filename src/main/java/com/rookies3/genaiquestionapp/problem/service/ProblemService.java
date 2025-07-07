@@ -1,9 +1,9 @@
-package com.rookies3.genaiquestionapp.service;
+package com.rookies3.genaiquestionapp.problem.service;
 
-import com.rookies3.genaiquestionapp.dto.ProblemDto;
-import com.rookies3.genaiquestionapp.entity.Choice;
-import com.rookies3.genaiquestionapp.entity.Problem;
-import com.rookies3.genaiquestionapp.repository.ProblemRepository;
+import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
+import com.rookies3.genaiquestionapp.problem.entity.Choice;
+import com.rookies3.genaiquestionapp.problem.entity.Problem;
+import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

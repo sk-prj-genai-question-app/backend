@@ -2,7 +2,6 @@ package com.rookies3.genaiquestionapp.problem.service;
 
 import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import com.rookies3.genaiquestionapp.record.dto.AnswerRecordDto;
-import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import com.rookies3.genaiquestionapp.problem.entity.Choice;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
@@ -176,16 +175,13 @@ public class ProblemService {
     private ProblemDto.ProblemSaveRequest callPythonAiProblemGenerator(String level, String problemType) {
         String pythonProblemType;
         String normalizedProblemType = problemType.trim();
-        switch (normalizedProblemType) {
-            case "V":
-            case "G":
-            case "R":
-                pythonProblemType = normalizedProblemType; // DB 값이 Python이 기대하는 값과 동일
-                break;
-            default:
+        pythonProblemType = switch (normalizedProblemType) {
+            case "V", "G", "R" -> normalizedProblemType; // DB 값이 Python이 기대하는 값과 동일
+            default -> {
                 System.err.println("Unsupported problem type received from analysis (DB value): '" + problemType + "' (normalized: '" + normalizedProblemType + "')");
                 throw new IllegalArgumentException("지원하지 않는 문제 유형입니다: " + problemType);
-        }
+            }
+        };
         ProblemDto.WeaknessBasedProblemGenerateRequest aiRequest = ProblemDto.WeaknessBasedProblemGenerateRequest.builder()
                 .level(level)
                 .problemType(pythonProblemType)

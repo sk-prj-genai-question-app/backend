@@ -2,27 +2,22 @@ package com.rookies3.genaiquestionapp.auth.service;
 
 import com.rookies3.genaiquestionapp.auth.controller.dto.LoginDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.SignupDto;
-import com.rookies3.genaiquestionapp.auth.controller.dto.TokenDto;
 import com.rookies3.genaiquestionapp.auth.entity.CustomUserDetails;
-import com.rookies3.genaiquestionapp.auth.entity.RefreshToken;
 import com.rookies3.genaiquestionapp.auth.entity.User;
-import com.rookies3.genaiquestionapp.auth.repository.RefreshTokenRepository;
 import com.rookies3.genaiquestionapp.auth.repository.UserRepository;
 import com.rookies3.genaiquestionapp.exception.BusinessException;
 import com.rookies3.genaiquestionapp.exception.ErrorCode;
 import com.rookies3.genaiquestionapp.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AuthService {
 

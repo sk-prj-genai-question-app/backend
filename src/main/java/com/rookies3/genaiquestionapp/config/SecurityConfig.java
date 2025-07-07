@@ -40,7 +40,7 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh", "/h2-console/**").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh", "/auth/signout" ,"/h2-console/**").permitAll()
                         .requestMatchers("/auth/me/information").authenticated()
                         // jwt 토큰이 없으면 접근 불가능
                         .anyRequest().authenticated()

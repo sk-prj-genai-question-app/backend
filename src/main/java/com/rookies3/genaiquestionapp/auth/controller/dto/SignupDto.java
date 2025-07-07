@@ -21,7 +21,7 @@ public class SignupDto {
         @NotBlank(message="비밀번호를 입력해주세요.")
         private String password;
 
-        @NotBlank(message="비밀번호 확인을 입력해주세요.")
+        @NotBlank(message="비밀번호 재입력해주세요.")
         private String passwordCheck;
     }
 

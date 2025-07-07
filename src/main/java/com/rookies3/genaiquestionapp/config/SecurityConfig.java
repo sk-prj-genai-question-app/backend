@@ -45,15 +45,15 @@ public class SecurityConfig {
                 // csrf 인증 비활성화 해 놓음. (나중에 지울 예정)
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
-                .cors(cors -> cors.configurationSource(customCorsSource()))
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // jwt 토큰 없이 접근 가능
-                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh", "/auth/signout" ,"/h2-console/**").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh","/h2-console/**").permitAll()
                         // jwt 토큰이 없으면 접근 불가능
-                        .requestMatchers("/auth/me/information").authenticated()
+                        .requestMatchers("/auth/me/information", "/auth/signout" ).authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -61,7 +61,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UrlBasedCorsConfigurationSource customCorsSource(){
+    public UrlBasedCorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration config = new CorsConfiguration();
 
         // 프론트 도메인 설정

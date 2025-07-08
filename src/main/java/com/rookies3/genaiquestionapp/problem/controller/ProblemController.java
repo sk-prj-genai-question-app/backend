@@ -2,12 +2,14 @@ package com.rookies3.genaiquestionapp.problem.controller;
 
 import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import com.rookies3.genaiquestionapp.problem.service.ProblemService;
+import com.rookies3.genaiquestionapp.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -52,8 +54,9 @@ public class ProblemController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/generate/weakness/{userId}") // POST 요청으로 userId를 받아 처리합니다.
-    public ResponseEntity<ProblemDto.ProblemDetailResponse> generateWeaknessProblem(@PathVariable Long userId) {
+    @PostMapping("/generate/weakness") // POST 요청으로 userId를 받아 처리합니다.
+    public ResponseEntity<ProblemDto.ProblemDetailResponse> generateWeaknessProblem(Authentication authentication) {
+        Long userId = SecurityUtil.extractUserId(authentication);
         ProblemDto.ProblemDetailResponse generatedProblem = problemService.generateAndSaveProblemForUserWeakness(userId);
         return ResponseEntity.ok(generatedProblem); // 성공 시 200 OK와 함께 문제 정보를 반환합니다.
     }

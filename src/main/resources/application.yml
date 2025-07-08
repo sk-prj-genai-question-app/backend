@@ -13,8 +13,11 @@ logging:
   file:
     path: logs # log file
 jwt:
-#  secret: ${JWT_SECRET}
-  secret: sC/o5UiWPOR8ObUuep12mhhvdanGRTKw09Ey4weX8r3XMu3Rve5VjnalBuLZhsTqXm/bS/TDLZAkaihkStvp8Q==
+  secret: ${JWT_SECRET}
   expiration-ms: 3600000
 cors:
   allowed-origins: http://localhost:5173
+ai:
+  problem:
+    generator:
+      url: http://127.0.0.1:8000/problems/generate

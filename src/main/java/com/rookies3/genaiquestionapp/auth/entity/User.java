@@ -1,11 +1,10 @@
-package com.rookies3.genaiquestionapp.entity;
-
+package com.rookies3.genaiquestionapp.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder

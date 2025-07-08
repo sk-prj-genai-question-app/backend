@@ -1,6 +1,6 @@
 package com.rookies3.genaiquestionapp.record.entity;
 
-import com.rookies3.genaiquestionapp.problem.entity.BaseEntity;
+import com.rookies3.genaiquestionapp.entity.BaseEntity;
 import com.rookies3.genaiquestionapp.auth.entity.User;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import jakarta.persistence.*;

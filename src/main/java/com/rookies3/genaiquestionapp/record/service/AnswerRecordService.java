@@ -22,12 +22,12 @@ public class AnswerRecordService {
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
 
-    public List<AnswerRecordDto.AnswerRecordDetailResponse> getAnswerRecords(Long userId, boolean isWrongs) {
+    public List<AnswerRecordDto.AnswerRecordDetailResponse> getAnswerRecords(Long userId, boolean isCorrect) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
 
         List<AnswerRecord> records;
-        if (isWrongs) {
+        if (isCorrect) {
             // 오답만 조회
             records = answerRecordRepository.findByUserAndIsCorrectFalseOrderByCreatedAtDesc(user);
         } else {
@@ -60,9 +60,9 @@ public class AnswerRecordService {
 
     // 저장
     @Transactional
-    public AnswerRecordDto.AnswerRecordDetailResponse saveAnswerRecord(AnswerRecordDto.AnswerRecordSaveRequest requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다. (ID: " + requestDto.getUserId() + ")"));
+    public AnswerRecordDto.AnswerRecordDetailResponse saveAnswerRecord(Long userId, AnswerRecordDto.AnswerRecordSaveRequest requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다. (ID: " + userId + ")"));
 
         Problem problem = problemRepository.findById(requestDto.getProblemId())
                 .orElseThrow(() -> new NoSuchElementException("문제를 찾을 수 없습니다. (ID: " + requestDto.getProblemId() + ")"));

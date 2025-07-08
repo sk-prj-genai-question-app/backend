@@ -12,9 +12,6 @@ public class AnswerRecordDto {
     @AllArgsConstructor
     @Builder
     public static class AnswerRecordSaveRequest {
-        @JsonProperty("user_id")
-        @NonNull
-        private Long userId;
 
         @JsonProperty("problem_id")
         @NonNull

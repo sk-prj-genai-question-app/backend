@@ -1,14 +1,22 @@
 package com.rookies3.genaiquestionapp.problem.service;
 
 import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
+import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.problem.entity.Choice;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
+import com.rookies3.genaiquestionapp.record.service.AnswerRecordService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList; // ArrayList 임포트 추가
 import java.util.List;
@@ -20,6 +28,11 @@ import java.util.stream.Collectors;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final AnswerRecordService answerRecordService;
+    private final RestTemplate restTemplate;
+
+    @Value("${ai.problem.generator.url}")
+    private String aiProblemGeneratorUrl;
 
     @Transactional
     public ProblemDto.ProblemDetailResponse addProblem(ProblemDto.ProblemSaveRequest requestDto) {
@@ -91,5 +104,113 @@ public class ProblemService {
                 .pagination(pagination)
                 .content(content)
                 .build();
+    }
+
+    // 취약점 기반 문제 생성 부분
+    @Transactional
+    public ProblemDto.ProblemDetailResponse generateAndSaveProblemForUserWeakness(Long userId) {
+        List<AnswerRecordDto.AnalysisResponse> analysisResults = answerRecordService.analyzeUserPerformance(userId);
+
+        if (analysisResults.isEmpty()) {
+            throw new IllegalStateException("사용자의 문제 풀이 기록이 없어 취약점을 분석할 수 없습니다.");
+        }
+
+        String targetLevel = null;
+        String targetProblemType = null;
+        double maxIncorrectRate = -1.0;
+
+        for (AnswerRecordDto.AnalysisResponse ar : analysisResults) {
+            if ("level_problemType_breakdown".equals(ar.getType())) {
+                String currentLevel = ar.getCategory();
+                for (AnswerRecordDto.AnalysisResult result : ar.getResults()) {
+                    if (result.getIncorrectRate() > maxIncorrectRate) {
+                        maxIncorrectRate = result.getIncorrectRate();
+                        targetLevel = currentLevel;
+                        targetProblemType = result.getCategory();
+                    }
+                }
+            }
+        }
+
+        if (targetLevel == null || targetProblemType == null || maxIncorrectRate == 0.0) {
+            // Logger 사용 권장
+            // log.warn("취약점 분석 실패 또는 모든 문제 정답. 기본 문제 유형으로 생성: N1 - 문법");
+            targetLevel = "N1";
+            targetProblemType = "문법";
+        }
+
+        ProblemDto.ProblemSaveRequest aiGeneratedProblemData;
+        try {
+            aiGeneratedProblemData = callPythonAiProblemGenerator(targetLevel, targetProblemType);
+        } catch (Exception e) {
+            throw new RuntimeException("AI 문제 생성 서버 호출 중 오류가 발생했습니다: " + e.getMessage(), e);
+        }
+
+        Problem problemToSave = Problem.builder()
+                .level(aiGeneratedProblemData.getLevel())
+                .problemType(aiGeneratedProblemData.getProblemType())
+                .problemTitleParent(aiGeneratedProblemData.getProblemTitleParent())
+                .problemTitleChild(aiGeneratedProblemData.getProblemTitleChild())
+                .problemContent(aiGeneratedProblemData.getProblemContent())
+                .answerNumber(aiGeneratedProblemData.getAnswerNumber())
+                .explanation(aiGeneratedProblemData.getExplanation())
+                .choices(new ArrayList<>()) // choices 리스트는 Problem 엔티티에서 @Builder.Default로 초기화됨
+                .build();
+
+        if (aiGeneratedProblemData.getChoices() != null) {
+            aiGeneratedProblemData.getChoices().forEach(choiceDto -> {
+                Choice choice = Choice.builder()
+                        .number(choiceDto.getNumber())
+                        .content(choiceDto.getContent())
+                        .isCorrect(choiceDto.getIsCorrect())
+                        .build();
+                problemToSave.addChoice(choice); // addChoice 사용
+            });
+        }
+
+        Problem savedProblem = problemRepository.save(problemToSave);
+        return ProblemDto.ProblemDetailResponse.fromEntity(savedProblem);
+    }
+
+    private ProblemDto.ProblemSaveRequest callPythonAiProblemGenerator(String level, String problemType) {
+        String pythonProblemType;
+        String normalizedProblemType = problemType.trim();
+        pythonProblemType = switch (normalizedProblemType) {
+            case "V", "G", "R" -> normalizedProblemType; // DB 값이 Python이 기대하는 값과 동일
+            default -> {
+                System.err.println("Unsupported problem type received from analysis (DB value): '" + problemType + "' (normalized: '" + normalizedProblemType + "')");
+                throw new IllegalArgumentException("지원하지 않는 문제 유형입니다: " + problemType);
+            }
+        };
+        ProblemDto.WeaknessBasedProblemGenerateRequest aiRequest = ProblemDto.WeaknessBasedProblemGenerateRequest.builder()
+                .level(level)
+                .problemType(pythonProblemType)
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<ProblemDto.WeaknessBasedProblemGenerateRequest> requestEntity = new HttpEntity<>(aiRequest, headers);
+
+        try {
+            ResponseEntity<ProblemDto.ProblemSaveRequest> responseEntity = restTemplate.postForEntity(
+                    aiProblemGeneratorUrl,
+                    requestEntity,
+                    ProblemDto.ProblemSaveRequest.class
+            );
+
+            if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
+                return responseEntity.getBody();
+            } else {
+                String errorMessage = "AI 문제 생성 서버 호출 실패: HTTP Status " + responseEntity.getStatusCode() + ", Response Body: " + responseEntity.getBody();
+                // Logger 사용 권장
+                // log.error(errorMessage);
+                throw new RuntimeException(errorMessage);
+            }
+        } catch (org.springframework.web.client.RestClientException e) {
+            // Logger 사용 권장
+            // log.error("HTTP 요청 중 오류 발생: " + e.getMessage(), e);
+            throw new RuntimeException("AI 문제 생성 서버와 통신 중 오류: " + e.getMessage(), e);
+        }
     }
 }

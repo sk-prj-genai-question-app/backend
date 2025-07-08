@@ -51,4 +51,10 @@ public class ProblemController {
         }
         return ResponseEntity.ok(responseDto);
     }
+
+    @PostMapping("/generate/weakness/{userId}") // POST 요청으로 userId를 받아 처리합니다.
+    public ResponseEntity<ProblemDto.ProblemDetailResponse> generateWeaknessProblem(@PathVariable Long userId) {
+        ProblemDto.ProblemDetailResponse generatedProblem = problemService.generateAndSaveProblemForUserWeakness(userId);
+        return ResponseEntity.ok(generatedProblem); // 성공 시 200 OK와 함께 문제 정보를 반환합니다.
+    }
 }

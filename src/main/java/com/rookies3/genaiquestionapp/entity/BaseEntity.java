@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.problem.entity;
+package com.rookies3.genaiquestionapp.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

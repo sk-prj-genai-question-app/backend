@@ -120,4 +120,17 @@ public class ProblemDto {
         private LocalDateTime timestamp = LocalDateTime.now();
         private String requestId;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class WeaknessBasedProblemGenerateRequest {
+        @JsonProperty("level")
+        private String level;
+        @JsonProperty("problem_type") // "V", "G", "R" 코드를 사용
+        private String problemType;
+    }
+
+
 }

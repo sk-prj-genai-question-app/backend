@@ -1,10 +1,8 @@
 package com.rookies3.genaiquestionapp.problem.entity;
 
+import com.rookies3.genaiquestionapp.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 @Entity
@@ -21,6 +19,7 @@ public class Choice extends BaseEntity {
     @Column(name = "id")
     private Long id;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
     private Problem problem;
@@ -33,4 +32,5 @@ public class Choice extends BaseEntity {
 
     @Column(name = "is_correct", nullable = false)
     private Boolean isCorrect;
+
 }

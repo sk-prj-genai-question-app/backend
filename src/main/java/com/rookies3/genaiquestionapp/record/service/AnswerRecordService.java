@@ -70,23 +70,35 @@ public class AnswerRecordService {
         // 정답 여부 계산
         boolean isCorrect = problem.getAnswerNumber().equals(requestDto.getUserAnswer());
 
-        // 사용자별 문제 풀이 순번 계산
-        Integer lastRecordsId = answerRecordRepository.findTopByUserOrderByIdDesc(user)
-                .map(AnswerRecord::getUserRecordsId)
-                .orElse(0);
-        Integer newUserRecordsId = lastRecordsId + 1;
+        // 기존 기록 존재 여부 확인
+        Optional<AnswerRecord> existingRecordOpt = answerRecordRepository.findByUserAndProblem(user, problem);
 
-        AnswerRecord answerRecord = AnswerRecord.builder()
-                .user(user)
-                .problem(problem)
-                .userAnswer(requestDto.getUserAnswer())
-                .isCorrect(isCorrect) // 계산된 isCorrect 사용
-                .userRecordsId(newUserRecordsId)
-                .build();
+        AnswerRecord answerRecord;
+        if (existingRecordOpt.isPresent()) {
+            // ✅ 기존 기록이 있다면 업데이트
+            answerRecord = existingRecordOpt.get();
+            answerRecord.setUserAnswer(requestDto.getUserAnswer());
+            answerRecord.setCorrect(isCorrect);
+        } else {
+            // ✅ 새로 저장
+            Integer lastRecordsId = answerRecordRepository.findTopByUserOrderByIdDesc(user)
+                    .map(AnswerRecord::getUserRecordsId)
+                    .orElse(0);
+            Integer newUserRecordsId = lastRecordsId + 1;
 
-        AnswerRecord savedRecord = answerRecordRepository.save(answerRecord);
-        return convertToDto(savedRecord);
+            answerRecord = AnswerRecord.builder()
+                    .user(user)
+                    .problem(problem)
+                    .userAnswer(requestDto.getUserAnswer())
+                    .isCorrect(isCorrect)
+                    .userRecordsId(newUserRecordsId)
+                    .build();
+        }
+
+        AnswerRecord saved = answerRecordRepository.save(answerRecord);
+        return convertToDto(saved);
     }
+
 
     // 삭제
     @Transactional

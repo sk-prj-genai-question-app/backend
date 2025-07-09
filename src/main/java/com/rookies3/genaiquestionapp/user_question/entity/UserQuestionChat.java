@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class UserQuestionChat extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "message_id")
     private Long id;
 
     // 양방향 관계 설정을 위한 Setter (UserQuestion에서 호출)

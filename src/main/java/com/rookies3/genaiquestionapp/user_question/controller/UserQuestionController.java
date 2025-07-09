@@ -29,7 +29,7 @@ public class UserQuestionController {
         try {
             Long userId = getCurrentUserId();
             UserQuestionDto.Response response = userQuestionService.processUserChat(userId, problemId, requestDto);
-            HttpStatus status = (requestDto.getQuestionThreadId() == null) ? HttpStatus.CREATED : HttpStatus.OK;
+            HttpStatus status = (requestDto.getUserQuestionId() == null) ? HttpStatus.CREATED : HttpStatus.OK;
             return new ResponseEntity<>(response, status);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

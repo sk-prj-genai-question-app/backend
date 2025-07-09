@@ -11,6 +11,7 @@ import com.rookies3.genaiquestionapp.user_question.repository.UserProblemChatRep
 import com.rookies3.genaiquestionapp.user_question.repository.UserQuestionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,10 +33,10 @@ public class UserQuestionService {
 
     @Transactional
     public UserQuestionDto.Response processUserChat(Long userId, Long problemId, UserQuestionDto.Request requestDto) {
-        if (requestDto.getQuestionThreadId() == null) {
+        if (requestDto.getUserQuestionId() == null) {
             return createNewQuestionThread(userId, problemId, requestDto.getContent());
         } else {
-            return addMessageToQuestionThread(requestDto.getQuestionThreadId(), userId, requestDto.getContent());
+            return addMessageToQuestionThread(requestDto.getUserQuestionId(), userId, requestDto.getContent());
         }
     }
 
@@ -48,6 +49,8 @@ public class UserQuestionService {
                 .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new NoSuchElementException("Problem not found with ID: " + problemId));
+
+        Hibernate.initialize(problem.getChoices());
 
         UserQuestion newQuestionThread = UserQuestion.builder()
                 .user(user)
@@ -153,7 +156,7 @@ public class UserQuestionService {
                     .orElse("");
 
             return UserQuestionDto.ListResponse.builder()
-                    .questionThreadId(thread.getId())
+                    .userQuestionId(thread.getId())
                     .problemId(thread.getProblem().getId())
                     .initialQueryPreview(initialQueryPreview)
                     .createdAt(thread.getCreatedAt())

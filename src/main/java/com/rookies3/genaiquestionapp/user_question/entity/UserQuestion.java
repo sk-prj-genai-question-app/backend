@@ -20,6 +20,7 @@ import java.util.List;
 public class UserQuestion extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_question_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -1,5 +1,6 @@
 package com.rookies3.genaiquestionapp.user_question.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.rookies3.genaiquestionapp.user_question.entity.UserQuestion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,8 @@ public class UserQuestionDto {
     @Builder
     public static class Request {
         // 기존 스레드에 메시지를 추가하는 경우 사용 (null 허용)
-        private Long questionThreadId;
+        @JsonProperty("user_question_id")
+        private Long userQuestionId;
 
         // 사용자 질문 또는 추가 메시지 내용
         @NotBlank(message = "Question or message content cannot be blank")
@@ -33,10 +35,15 @@ public class UserQuestionDto {
     @AllArgsConstructor
     @Builder
     public static class Response {
-        private Long questionThreadId;
+        @JsonProperty("user_question_id")
+        private Long userQuestionId;
+        @JsonProperty("problem_id")
         private Long problemId;
+        @JsonProperty("user_id")
         private Long userId;
+        @JsonProperty("created_at")
         private LocalDateTime createdAt;
+        @JsonProperty("updated_at")
         private LocalDateTime updatedAt;
         private List<UserQuestionChatDto> chatMessages; // UserProblemChatDto 참조
 
@@ -46,7 +53,7 @@ public class UserQuestionDto {
                     .collect(Collectors.toList());
 
             return Response.builder()
-                    .questionThreadId(userQuestion.getId())
+                    .userQuestionId(userQuestion.getId())
                     .problemId(userQuestion.getProblem().getId())
                     .userId(userQuestion.getUser().getId())
                     .createdAt(userQuestion.getCreatedAt())
@@ -62,9 +69,12 @@ public class UserQuestionDto {
     @AllArgsConstructor
     @Builder
     public static class ListResponse {
-        private Long questionThreadId;
+        @JsonProperty("user_question_id")
+        private Long userQuestionId;
+        @JsonProperty("problem_id")
         private Long problemId;
         private String initialQueryPreview;
+        @JsonProperty("created_at")
         private LocalDateTime createdAt;
         private LocalDateTime lastUpdatedAt;
         private String lastMessagePreview;

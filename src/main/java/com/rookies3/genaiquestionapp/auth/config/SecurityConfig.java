@@ -52,10 +52,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // jwt 토큰 없이 접근 가능
                         .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh","/h2-console/**").permitAll()
-                        .requestMatchers("/api/problems/**").permitAll() // 일단 임시 접근 가능
+                        .requestMatchers("/api/problems/**", "/api/ai/**").permitAll() // 일단 임시 접근 가능
                         .requestMatchers("/api/answer-record/**").authenticated()
                         // jwt 토큰이 없으면 접근 불가능
-                        .requestMatchers("/auth/me/information", "/auth/signout" ).authenticated()
+                        .requestMatchers("/auth/me/information", "/auth/signout", "/api/ai/ask" ).authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

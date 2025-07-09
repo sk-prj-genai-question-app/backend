@@ -2,6 +2,7 @@ package com.rookies3.genaiquestionapp.user_question.entity;
 
 import com.rookies3.genaiquestionapp.auth.entity.User;
 import com.rookies3.genaiquestionapp.entity.BaseEntity;
+import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.record.entity.AnswerRecord;
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,7 +28,7 @@ public class UserQuestion extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_records", nullable = false)
-    private AnswerRecord problem;
+    private Problem problem;
 
 
     @OneToMany(mappedBy = "userQuestion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

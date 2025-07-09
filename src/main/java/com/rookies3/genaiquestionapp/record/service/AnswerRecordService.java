@@ -54,6 +54,7 @@ public class AnswerRecordService {
                 .userAnswer(record.getUserAnswer())
                 .explanation(record.getProblem().getExplanation())
                 .createdAt(record.getCreatedAt())
+                .updatedAt(record.getUpdatedAt())  // 추가
                 .isCorrect(record.isCorrect())
                 .build();
     }

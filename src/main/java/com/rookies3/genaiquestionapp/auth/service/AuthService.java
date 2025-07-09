@@ -108,4 +108,21 @@ public class AuthService {
             throw new BusinessException(ErrorCode.AUTH_PASSWORD_NOT_EQUAL_ERROR);
         }
     }
+
+    // 비밀번호 검증
+    public boolean verifyPassword(String email, String rawPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND));
+        return passwordEncoder.matches(rawPassword, user.getPassword());
+    }
+
+    // 비밀번호 변경
+    public void changePassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND));
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+    }
+
 }

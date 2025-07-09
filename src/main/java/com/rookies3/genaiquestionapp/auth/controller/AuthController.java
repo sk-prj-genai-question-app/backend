@@ -3,6 +3,7 @@ package com.rookies3.genaiquestionapp.auth.controller;
 import com.rookies3.genaiquestionapp.auth.controller.dto.AccessTokenDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.LoginDto;
 import com.rookies3.genaiquestionapp.auth.controller.dto.SignupDto;
+import com.rookies3.genaiquestionapp.auth.entity.CustomUserDetails;
 import com.rookies3.genaiquestionapp.auth.service.AuthService;
 import com.rookies3.genaiquestionapp.auth.service.RefreshTokenService;
 import com.rookies3.genaiquestionapp.exception.BusinessException;
@@ -19,6 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -106,5 +109,23 @@ public class AuthController {
                 .path("/")
                 .maxAge(7 * 24 * 60 * 60)  // 7일
                 .build();
+    }
+
+    @PostMapping("/verify-password")
+    public ResponseEntity<?> verifyPassword(@RequestBody Map<String, String> request, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String password = request.get("password");
+        boolean isMatch = authService.verifyPassword(userDetails.getEmail(), password);
+        if (isMatch) {
+            return ResponseEntity.ok(Map.of("success", true, "message", "비밀번호 일치"));
+        } else {
+            return ResponseEntity.ok(Map.of("success", false, "message", "비밀번호가 틀렸습니다."));
+        }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String newPassword = request.get("newPassword");
+        authService.changePassword(userDetails.getEmail(), newPassword);
+        return ResponseEntity.ok(Map.of("success", true, "message", "비밀번호 변경 성공"));
     }
 }

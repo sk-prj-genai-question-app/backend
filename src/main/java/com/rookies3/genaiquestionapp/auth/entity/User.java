@@ -5,6 +5,7 @@ import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -23,5 +24,6 @@ public class User {
 
     @Column(nullable = false)
     private Boolean isAdmin;
+
 
 }

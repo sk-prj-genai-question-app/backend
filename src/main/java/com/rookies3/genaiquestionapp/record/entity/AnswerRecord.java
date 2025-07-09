@@ -34,4 +34,13 @@ public class AnswerRecord extends BaseEntity {
 
     @Column(name = "is_correct",nullable = false)
     private boolean isCorrect;
+
+    public void setUserAnswer(Integer userAnswer) {
+        this.userAnswer = userAnswer;
+    }
+
+    public void setCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
+    }
+
 }

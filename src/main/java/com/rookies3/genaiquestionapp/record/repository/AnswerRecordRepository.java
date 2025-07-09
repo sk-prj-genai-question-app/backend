@@ -1,6 +1,7 @@
 // AnswerRecordRepository.java
 package com.rookies3.genaiquestionapp.record.repository;
 
+import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.record.entity.AnswerRecord;
 import com.rookies3.genaiquestionapp.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +16,9 @@ public interface AnswerRecordRepository extends JpaRepository<AnswerRecord, Long
 
     // 특정 사용자의 최근 문제 풀이 저장 순번 조회
     Optional<AnswerRecord> findTopByUserOrderByIdDesc(User user);
+    // DB 같은 문제 번호 중복 방지
+    Optional<AnswerRecord> findByUserAndProblem(User user, Problem problem);
+
 
     List<AnswerRecord> findByUser(User user);
 }

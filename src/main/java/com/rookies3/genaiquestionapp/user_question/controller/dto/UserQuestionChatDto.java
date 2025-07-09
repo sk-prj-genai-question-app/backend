@@ -12,18 +12,18 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserProblemChatDto { // Represents a single chat message
+public class UserQuestionChatDto {
     private Long messageId;
     private String content;
-    private String senderType;
+    private Boolean isUser;
     private Integer messageOrder;
     private LocalDateTime createdAt;
 
-    public static UserProblemChatDto fromEntity(UserQuestionChat chat) {
-        return UserProblemChatDto.builder()
+    public static UserQuestionChatDto fromEntity(UserQuestionChat chat) {
+        return UserQuestionChatDto.builder()
                 .messageId(chat.getId())
                 .content(chat.getContent())
-                .senderType(chat.getSenderType())
+                .isUser(chat.getIsUser())
                 .messageOrder(chat.getMessageOrder())
                 .createdAt(chat.getCreatedAt())
                 .build();

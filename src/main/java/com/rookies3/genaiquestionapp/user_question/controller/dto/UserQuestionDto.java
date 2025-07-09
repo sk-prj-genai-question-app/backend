@@ -38,11 +38,11 @@ public class UserQuestionDto {
         private Long userId;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private List<UserProblemChatDto> chatMessages; // UserProblemChatDto 참조
+        private List<UserQuestionChatDto> chatMessages; // UserProblemChatDto 참조
 
         public static Response fromEntity(UserQuestion userQuestion) {
-            List<UserProblemChatDto> messages = userQuestion.getChatMessages().stream()
-                    .map(UserProblemChatDto::fromEntity) // UserProblemChatDto의 fromEntity 호출
+            List<UserQuestionChatDto> messages = userQuestion.getChatMessages().stream()
+                    .map(UserQuestionChatDto::fromEntity) // UserProblemChatDto의 fromEntity 호출
                     .collect(Collectors.toList());
 
             return Response.builder()

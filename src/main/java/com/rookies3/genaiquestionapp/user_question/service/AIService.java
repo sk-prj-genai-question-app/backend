@@ -2,6 +2,7 @@ package com.rookies3.genaiquestionapp.user_question.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // 이 서비스는 이제 외부 Python FastAPI 챗봇 API를 호출합니다.
 @Service
@@ -27,9 +29,9 @@ public class AIService {
     private final RestTemplate restTemplate; // HTTP 요청을 위한 RestTemplate 주입
     private final ObjectMapper objectMapper; // JSON 파싱을 위한 ObjectMapper 주입
 
-    public String getAIResponse(Long userQuestionId, String currentQuestion, List<Map<String, String>> chatHistory) {
+    public String getAIResponse(Long userQuestionId, Problem problem, String currentQuestion, List<Map<String, String>> chatHistory) {
         // Python FastAPI 챗봇 API의 완전한 URL
-        String chatbotApiUrl = pythonAiServiceBaseUrl + "/question_chatbot/ask"; // 변경된 엔드포인트 경로
+        String chatbotApiUrl = pythonAiServiceBaseUrl + "/user_question_chatbot/ask"; // 변경된 엔드포인트 경로
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -39,6 +41,33 @@ public class AIService {
         requestBody.put("user_question_id", userQuestionId); // UserQuestion ID 전달
         requestBody.put("question", currentQuestion); // 사용자의 현재 질문
         requestBody.put("chat_history", chatHistory); // 이전 대화 기록
+        requestBody.put("problem_id", problem.getId());
+        requestBody.put("problem_level", problem.getLevel()); // Problem 엔티티에 getLevel() 메서드 필요
+        requestBody.put("problem_type", problem.getProblemType()); // Problem 엔티티에 getProblemType() 메서드 필요
+        requestBody.put("problem_title_parent", problem.getProblemTitleParent());
+        requestBody.put("problem_title_child", problem.getProblemTitleChild());
+        requestBody.put("problem_content", problem.getProblemContent());
+        List<Map<String, Object>> choicesData = problem.getChoices().stream()
+                .map(choice -> {
+                    Map<String, Object> choiceMap = new HashMap<>();
+                    choiceMap.put("id", choice.getId());
+                    choiceMap.put("number", choice.getNumber());
+                    choiceMap.put("content", choice.getContent());
+                    choiceMap.put("is_correct", choice.getIsCorrect());
+                    return choiceMap;
+                })
+                .collect(Collectors.toList());
+        requestBody.put("problem_choices", choicesData); // 선택지 리스트 전달
+        requestBody.put("problem_answer_number", problem.getAnswerNumber());
+        requestBody.put("problem_explanation", problem.getExplanation());
+
+        // 디버깅 확인용 로그 추가
+        try {
+            String requestBodyJson = objectMapper.writeValueAsString(requestBody);
+            System.out.println("Sending to Python Chatbot API: " + requestBodyJson);
+        } catch (Exception e) {
+            System.err.println("Error converting requestBody to JSON: " + e.getMessage());
+        }
 
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
 

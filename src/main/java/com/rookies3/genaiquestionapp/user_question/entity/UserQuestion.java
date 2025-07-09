@@ -30,7 +30,7 @@ public class UserQuestion extends BaseEntity {
     @JoinColumn(name = "answer_records", nullable = false)
     private Problem problem;
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "userQuestion", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("messageOrder ASC") // 메시지 순서대로 정렬하여 가져옴
     private List<UserQuestionChat> chatMessages = new ArrayList<>();

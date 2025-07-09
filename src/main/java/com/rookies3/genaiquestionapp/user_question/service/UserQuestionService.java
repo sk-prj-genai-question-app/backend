@@ -58,7 +58,7 @@ public class UserQuestionService {
         UserQuestionChat userChatMessage = UserQuestionChat.builder()
                 .userQuestion(newQuestionThread)
                 .content(initialUserQuery)
-                .senderType("USER")
+                .isUser(true)
                 .messageOrder(1)
                 .build();
         newQuestionThread.addChatMessage(userChatMessage);
@@ -68,13 +68,18 @@ public class UserQuestionService {
         List<Map<String, String>> conversationHistory = new ArrayList<>();
         conversationHistory.add(Map.of("role", "user", "content", initialUserQuery));
 
-        // AIService 호출 시 userQuestionId와 현재 질문, 대화 기록 전달
-        String aiResponseContent = aiService.getAIResponse(newQuestionThread.getId(), initialUserQuery, conversationHistory);
+        // AIService 호출 시 userQuestionId와 현재 질문, 문제, 대화 기록 전달
+        String aiResponseContent = aiService.getAIResponse(
+                newQuestionThread.getId(),
+                problem,
+                initialUserQuery,
+                conversationHistory
+        );
 
         UserQuestionChat aiChatMessage = UserQuestionChat.builder()
                 .userQuestion(newQuestionThread)
                 .content(aiResponseContent)
-                .senderType("AI")
+                .isUser(false)
                 .messageOrder(2)
                 .build();
         newQuestionThread.addChatMessage(aiChatMessage);
@@ -91,6 +96,8 @@ public class UserQuestionService {
         UserQuestion questionThread = userQuestionRepository.findByIdAndUserId(questionThreadId, userId)
                 .orElseThrow(() -> new NoSuchElementException("Question thread not found or unauthorized."));
 
+        Problem problem = questionThread.getProblem();
+
         int lastMessageOrder = userProblemChatRepository.findFirstByUserQuestionIdOrderByMessageOrderDesc(questionThread.getId())
                 .map(UserQuestionChat::getMessageOrder)
                 .orElse(0);
@@ -99,15 +106,20 @@ public class UserQuestionService {
         List<Map<String, String>> conversationHistory = new ArrayList<>();
         // 기존 대화 메시지들을 모두 추가 (Python 챗봇의 ChatRequest에 맞게 role 변환)
         for (UserQuestionChat chat : questionThread.getChatMessages()) {
-            conversationHistory.add(Map.of("role", chat.getSenderType().toLowerCase(), "content", chat.getContent()));
+            conversationHistory.add(Map.of("role", chat.getIsUser() ? "user" : "ai", "content", chat.getContent()));
         }
-        // AIService 호출 시 userQuestionId와 현재 질문, 대화 기록 전달
-        String aiResponseContent = aiService.getAIResponse(questionThread.getId(), userMessage, conversationHistory);
+        // AIService 호출 시 userQuestionId와 현재 질문, 문제, 대화 기록 전달
+        String aiResponseContent = aiService.getAIResponse(
+                questionThread.getId(),
+                problem, // <-- 이 부분이 변경됨
+                userMessage,
+                conversationHistory
+        );
 
         UserQuestionChat userChatMessage = UserQuestionChat.builder()
                 .userQuestion(questionThread)
                 .content(userMessage)
-                .senderType("USER")
+                .isUser(true)
                 .messageOrder(lastMessageOrder + 1)
                 .build();
         questionThread.addChatMessage(userChatMessage);
@@ -116,7 +128,7 @@ public class UserQuestionService {
         UserQuestionChat aiChatMessage = UserQuestionChat.builder()
                 .userQuestion(questionThread)
                 .content(aiResponseContent)
-                .senderType("AI")
+                .isUser(true)
                 .messageOrder(lastMessageOrder + 2)
                 .build();
         questionThread.addChatMessage(aiChatMessage);
@@ -131,7 +143,7 @@ public class UserQuestionService {
         return questionThreads.stream().map(thread -> {
             String initialQueryPreview = userProblemChatRepository.findByUserQuestionIdOrderByMessageOrderAsc(thread.getId())
                     .stream()
-                    .filter(chat -> "USER".equals(chat.getSenderType()) && chat.getMessageOrder() == 1)
+                    .filter(chat -> chat.getIsUser() && chat.getMessageOrder() == 1)
                     .map(UserQuestionChat::getContent)
                     .findFirst()
                     .orElse("Initial query not found.");

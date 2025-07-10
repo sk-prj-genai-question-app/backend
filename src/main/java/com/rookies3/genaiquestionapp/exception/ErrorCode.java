@@ -15,6 +15,9 @@ public enum ErrorCode {
     AUTH_UNAUTHORIZED("A006","권한이 없습니다.",HttpStatus.UNAUTHORIZED),
     AUTH_USER_NOT_FOUND("A007", "AUTH_USER_NOT_FOUND", HttpStatus.BAD_REQUEST);
 
+    // user 관련 에러
+
+
     private final String code;
     private final String message;
     private final HttpStatus httpStatus;

@@ -9,12 +9,9 @@ devtools:
 server:
   port: 8080 # 애플리케이션 포트 설정, 기본은 8080
   address: 0.0.0.0 # 모든 IP 주소에서 접근 허용
-#logging:
-#  file:
-#    path: logs # log file
 logging:
-  level:
-    root: INFO
+  file:
+    path: logs # log file
 jwt:
   secret: ${JWT_SECRET}
   expiration-ms: 3600000

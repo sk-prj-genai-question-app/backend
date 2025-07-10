@@ -3,7 +3,6 @@ package com.rookies3.genaiquestionapp.ai.controller;
 import com.rookies3.genaiquestionapp.ai.controller.dto.AiDto;
 import com.rookies3.genaiquestionapp.ai.controller.dto.SubmitProblemDto;
 import com.rookies3.genaiquestionapp.ai.service.AiService;
-import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import com.rookies3.genaiquestionapp.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

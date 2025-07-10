@@ -24,10 +24,10 @@ public class Choice extends BaseEntity {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
-    @Column(name = "number", nullable = false, columnDefinition = "INT CHECK (number >= 1 AND number <= 4)")
+    @Column(name = "number", nullable = false)
     private Integer number;
 
-    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content", nullable = false, length = 2047)
     private String content;
 
     @Column(name = "is_correct", nullable = false)

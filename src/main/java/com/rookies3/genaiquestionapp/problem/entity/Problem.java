@@ -21,10 +21,10 @@ public class Problem extends BaseEntity {
     @Column
     private Long id;
 
-    @Column(name = "level", columnDefinition = "CHAR(2) CHECK (level IN ('N1', 'N2', 'N3'))")
+    @Column(name = "level")
     private String level;
 
-    @Column(name = "problem_type", columnDefinition = "CHAR(1) CHECK (problem_type IN ('V', 'G', 'R'))")
+    @Column(name = "problem_type")
     private String problemType;
 
     @Column(name = "problem_title_parent", nullable = false)
@@ -33,17 +33,17 @@ public class Problem extends BaseEntity {
     @Column(name = "problem_title_child")
     private String problemTitleChild;
 
-    @Column(name = "problem_content", columnDefinition = "TEXT")
+    @Column(name = "problem_content", length = 2047)
     private String problemContent;
 
-    @Column(name = "answer_number", nullable = false, columnDefinition = "INT CHECK (answer_number >= 1 AND answer_number <= 4)")
+    @Column(name = "answer_number", nullable = false)
     private Integer answerNumber;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Choice> choices = new ArrayList<>();
 
-    @Column(name = "explanation", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "explanation", nullable = false, length = 2047)
     private String explanation;
 
     public void addChoice(Choice choice) {

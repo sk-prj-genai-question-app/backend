@@ -1,7 +1,7 @@
-package com.rookies3.genaiquestionapp.user_question.controller;
+package com.rookies3.genaiquestionapp.userquestion.controller;
 
-import com.rookies3.genaiquestionapp.user_question.controller.dto.UserQuestionDto;
-import com.rookies3.genaiquestionapp.user_question.service.UserQuestionService;
+import com.rookies3.genaiquestionapp.userquestion.controller.dto.UserQuestionDto;
+import com.rookies3.genaiquestionapp.userquestion.service.UserQuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

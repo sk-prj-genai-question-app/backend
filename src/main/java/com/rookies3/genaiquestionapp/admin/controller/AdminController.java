@@ -1,11 +1,10 @@
 package com.rookies3.genaiquestionapp.admin.controller;
 
 import com.rookies3.genaiquestionapp.auth.entity.User;
-import com.rookies3.genaiquestionapp.auth.entity.User;
 import com.rookies3.genaiquestionapp.auth.repository.UserRepository;
 import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
 import com.rookies3.genaiquestionapp.record.repository.AnswerRecordRepository;
-import com.rookies3.genaiquestionapp.user_question.repository.UserQuestionRepository;
+import com.rookies3.genaiquestionapp.userquestion.repository.UserQuestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;

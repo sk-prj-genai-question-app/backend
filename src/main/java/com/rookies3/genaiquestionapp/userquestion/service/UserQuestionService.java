@@ -1,14 +1,14 @@
-package com.rookies3.genaiquestionapp.user_question.service;
+package com.rookies3.genaiquestionapp.userquestion.service;
 
 import com.rookies3.genaiquestionapp.auth.entity.User;
 import com.rookies3.genaiquestionapp.auth.repository.UserRepository;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
 import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
-import com.rookies3.genaiquestionapp.user_question.controller.dto.UserQuestionDto;
-import com.rookies3.genaiquestionapp.user_question.entity.UserQuestion;
-import com.rookies3.genaiquestionapp.user_question.entity.UserQuestionChat;
-import com.rookies3.genaiquestionapp.user_question.repository.UserProblemChatRepository;
-import com.rookies3.genaiquestionapp.user_question.repository.UserQuestionRepository;
+import com.rookies3.genaiquestionapp.userquestion.controller.dto.UserQuestionDto;
+import com.rookies3.genaiquestionapp.userquestion.entity.UserQuestion;
+import com.rookies3.genaiquestionapp.userquestion.entity.UserQuestionChat;
+import com.rookies3.genaiquestionapp.userquestion.repository.UserProblemChatRepository;
+import com.rookies3.genaiquestionapp.userquestion.repository.UserQuestionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;

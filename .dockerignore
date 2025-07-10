@@ -1,0 +1,12 @@
+.git
+.github
+.idea
+.vscode
+build
+logs
+.gradle
+gradlew
+gradlew.bat
+*.ipr
+*.iml
+*.iws

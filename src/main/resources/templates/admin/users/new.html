@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{admin/layout}">
+<head>
+    <title>새 사용자 추가</title>
+</head>
+<body>
+    <div layout:fragment="header-title">
+        <h1>새 사용자 추가</h1>
+    </div>
+    <div layout:fragment="content">
+        <form th:action="@{/admin/users/new}" th:object="${user}" method="post">
+            <div>
+                <label for="email">이메일:</label>
+                <input type="email" id="email" th:field="*{email}" required>
+            </div>
+            <div>
+                <label for="password">비밀번호:</label>
+                <input type="password" id="password" th:field="*{password}" required>
+            </div>
+            <div>
+                <label for="isAdmin">관리자 여부:</label>
+                <input type="checkbox" id="isAdmin" th:field="*{isAdmin}">
+            </div>
+            <div>
+                <button type="submit">저장</button>
+                <a th:href="@{/admin/users}">취소</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

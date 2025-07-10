@@ -25,7 +25,7 @@ VOLUME /tmp
 # 빌더 스테이지에서 생성된 JAR 파일을 최종 이미지로 복사합니다.
 # 'GenAiQuestionApp-0.0.1-SNAPSHOT.jar' 파일을 'app.jar'라는 이름으로 복사합니다.
 # 'app.jar'는 컨테이너 내에서 실행될 애플리케이션의 이름입니다.
-COPY --from=builder /app/build/libs/GenAiQuestionApp-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/build/libs/*.jar app.jar
 
 # 컨테이너가 시작될 때 실행될 명령어 정의
 # 'java -jar app.jar' 명령으로 Spring Boot 애플리케이션을 실행합니다.

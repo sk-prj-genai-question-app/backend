@@ -1,25 +1,33 @@
 package com.rookies3.genaiquestionapp.record.controller;
 
+import com.rookies3.genaiquestionapp.auth.repository.UserRepository;
+import com.rookies3.genaiquestionapp.problem.repository.ProblemRepository;
 import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.record.service.AnswerRecordService;
+import com.rookies3.genaiquestionapp.util.SecurityUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("api/answer-record")
+@RequestMapping("/api/answer-record")
 @RequiredArgsConstructor
 public class AnswerRecordController {
     private final AnswerRecordService answerRecordService;
+    private final UserRepository userRepository;
+    private final ProblemRepository problemRepository;
+
     @PostMapping
-    public ResponseEntity<AnswerRecordDto.AnswerRecordDetailResponse> saveAnswerRecord(@Valid @RequestBody AnswerRecordDto.AnswerRecordSaveRequest request) {
+    public ResponseEntity<AnswerRecordDto.AnswerRecordDetailResponse> saveAnswerRecord(Authentication authentication, @Valid @RequestBody AnswerRecordDto.AnswerRecordSaveRequest request) {
         try {
-            AnswerRecordDto.AnswerRecordDetailResponse response = answerRecordService.saveAnswerRecord(request);
+            Long userId = SecurityUtil.extractUserId(authentication);
+            AnswerRecordDto.AnswerRecordDetailResponse response = answerRecordService.saveAnswerRecord(userId, request);
             return new ResponseEntity<>(response, HttpStatus.CREATED); // 201 Created
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // 404 Not Found (User 또는 Problem 없음)
@@ -29,28 +37,31 @@ public class AnswerRecordController {
     }
     /**
      * 특정 사용자의 문제 풀이 기록 조회
-     * 오답만 조회할 시 ?isWrong=True 파라미터 사용
+     * 오답만 조회할 시 ?isCorrect=false 파라미터 사용
      *
-     * @param userId 사용자 ID
-     * @param isWrongs 오답만 조회할지 여부
+     * @param authentication 현재 인증된 사용자 정보
+     * @param isCorrect 오답만 조회할지 여부
      * @return 문제풀이 기록 DTO 목록
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping("/my-records")
     public ResponseEntity<List<AnswerRecordDto.AnswerRecordDetailResponse>> getAnswerRecordsForUser(
-            @PathVariable Long userId,
-            @RequestParam(value = "isWrongs", defaultValue = "false") boolean isWrongs) {
+            Authentication authentication,
+            @RequestParam(value = "isCorrect", defaultValue = "True") boolean isCorrect) {
 
-        List<AnswerRecordDto.AnswerRecordDetailResponse> records = answerRecordService.getAnswerRecords(userId, isWrongs);
+        Long userId = SecurityUtil.extractUserId(authentication);
+        List<AnswerRecordDto.AnswerRecordDetailResponse> records = answerRecordService.getAnswerRecords(userId, isCorrect);
         if (records.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(records);
     }
 
-    @DeleteMapping("/user/{userId}/{recordId}")
+    @DeleteMapping("/{recordId}")
     public ResponseEntity<String> deleteAnswerRecordForUser(
-            @PathVariable Long userId,
+            Authentication authentication,
             @PathVariable Long recordId) {
+
+        Long userId = SecurityUtil.extractUserId(authentication);
         try {
             answerRecordService.deleteAnswerRecord(recordId, userId);
             return ResponseEntity.ok("문제 풀이 기록이 성공적으로 삭제되었습니다!"); // 200 OK
@@ -64,8 +75,9 @@ public class AnswerRecordController {
         }
     }
 
-    @GetMapping("/user/{userId}/analysis")
-    public ResponseEntity<List<AnswerRecordDto.AnalysisResponse>> analyzeUserPerformance(@PathVariable Long userId) {
+    @GetMapping("/my-analysis")
+    public ResponseEntity<List<AnswerRecordDto.AnalysisResponse>> analyzeUserPerformance(Authentication authentication) {
+        Long userId = SecurityUtil.extractUserId(authentication);
         try {
             List<AnswerRecordDto.AnalysisResponse> analysisResults = answerRecordService.analyzeUserPerformance(userId);
             if (analysisResults.isEmpty()) {

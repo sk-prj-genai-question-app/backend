@@ -1,5 +1,7 @@
 package com.rookies3.genaiquestionapp.record.service;
 
+import com.rookies3.genaiquestionapp.exception.BusinessException;
+import com.rookies3.genaiquestionapp.exception.ErrorCode;
 import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.record.entity.AnswerRecord;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
@@ -22,12 +24,12 @@ public class AnswerRecordService {
     private final UserRepository userRepository;
     private final ProblemRepository problemRepository;
 
-    public List<AnswerRecordDto.AnswerRecordDetailResponse> getAnswerRecords(Long userId, boolean isWrongs) {
+    public List<AnswerRecordDto.AnswerRecordDetailResponse> getAnswerRecords(Long userId, boolean isCorrect) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User not found with ID: " + userId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND));
 
         List<AnswerRecord> records;
-        if (isWrongs) {
+        if (isCorrect) {
             // 오답만 조회
             records = answerRecordRepository.findByUserAndIsCorrectFalseOrderByCreatedAtDesc(user);
         } else {
@@ -54,48 +56,61 @@ public class AnswerRecordService {
                 .userAnswer(record.getUserAnswer())
                 .explanation(record.getProblem().getExplanation())
                 .createdAt(record.getCreatedAt())
+                .updatedAt(record.getUpdatedAt())  // 추가
                 .isCorrect(record.isCorrect())
                 .build();
     }
 
     // 저장
     @Transactional
-    public AnswerRecordDto.AnswerRecordDetailResponse saveAnswerRecord(AnswerRecordDto.AnswerRecordSaveRequest requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다. (ID: " + requestDto.getUserId() + ")"));
+    public AnswerRecordDto.AnswerRecordDetailResponse saveAnswerRecord(Long userId, AnswerRecordDto.AnswerRecordSaveRequest requestDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND));
 
         Problem problem = problemRepository.findById(requestDto.getProblemId())
-                .orElseThrow(() -> new NoSuchElementException("문제를 찾을 수 없습니다. (ID: " + requestDto.getProblemId() + ")"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PROBLEM_NOT_FOUND));
 
         // 정답 여부 계산
         boolean isCorrect = problem.getAnswerNumber().equals(requestDto.getUserAnswer());
 
-        // 사용자별 문제 풀이 순번 계산
-        Integer lastRecordsId = answerRecordRepository.findTopByUserOrderByIdDesc(user)
-                .map(AnswerRecord::getUserRecordsId)
-                .orElse(0);
-        Integer newUserRecordsId = lastRecordsId + 1;
+        // 기존 기록 존재 여부 확인
+        Optional<AnswerRecord> existingRecordOpt = answerRecordRepository.findByUserAndProblem(user, problem);
 
-        AnswerRecord answerRecord = AnswerRecord.builder()
-                .user(user)
-                .problem(problem)
-                .userAnswer(requestDto.getUserAnswer())
-                .isCorrect(isCorrect) // 계산된 isCorrect 사용
-                .userRecordsId(newUserRecordsId)
-                .build();
+        AnswerRecord answerRecord;
+        if (existingRecordOpt.isPresent()) {
+            // ✅ 기존 기록이 있다면 업데이트
+            answerRecord = existingRecordOpt.get();
+            answerRecord.setUserAnswer(requestDto.getUserAnswer());
+            answerRecord.setCorrect(isCorrect);
+        } else {
+            // ✅ 새로 저장
+            Integer lastRecordsId = answerRecordRepository.findTopByUserOrderByIdDesc(user)
+                    .map(AnswerRecord::getUserRecordsId)
+                    .orElse(0);
+            Integer newUserRecordsId = lastRecordsId + 1;
 
-        AnswerRecord savedRecord = answerRecordRepository.save(answerRecord);
-        return convertToDto(savedRecord);
+            answerRecord = AnswerRecord.builder()
+                    .user(user)
+                    .problem(problem)
+                    .userAnswer(requestDto.getUserAnswer())
+                    .isCorrect(isCorrect)
+                    .userRecordsId(newUserRecordsId)
+                    .build();
+        }
+
+        AnswerRecord saved = answerRecordRepository.save(answerRecord);
+        return convertToDto(saved);
     }
+
 
     // 삭제
     @Transactional
     public void deleteAnswerRecord(Long recordId, Long userId) {
         AnswerRecord recordToDelete = answerRecordRepository.findById(recordId)
-                .orElseThrow(() -> new NoSuchElementException("Answer record not found with ID: " + recordId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.ANSWER_RECORD_NOT_FOUND));
 
         if (!recordToDelete.getUser().getId().equals(userId)) {
-            throw new SecurityException("User " + userId + " does not have permission to delete record " + recordId);
+            throw new BusinessException(ErrorCode.ANSWER_RECORD_FORBIDDEN);
         }
 
         answerRecordRepository.delete(recordToDelete);
@@ -104,7 +119,7 @@ public class AnswerRecordService {
     // 레벨 분석
     public List<AnswerRecordDto.AnalysisResponse> analyzeUserPerformance(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다. (ID: " + userId + ")"));
+                .orElseThrow(() -> new BusinessException(ErrorCode.AUTH_USER_NOT_FOUND));
 
         List<AnswerRecord> userRecords = answerRecordRepository.findByUser(user);
         if (userRecords.isEmpty()) {

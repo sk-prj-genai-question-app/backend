@@ -12,9 +12,6 @@ public class AnswerRecordDto {
     @AllArgsConstructor
     @Builder
     public static class AnswerRecordSaveRequest {
-        @JsonProperty("user_id")
-        @NonNull
-        private Long userId;
 
         @JsonProperty("problem_id")
         @NonNull
@@ -44,6 +41,7 @@ public class AnswerRecordDto {
         private String explanation; // 해설
         private boolean isCorrect;
         private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;   // 추가
     }
 
     // 취약 유형 분석

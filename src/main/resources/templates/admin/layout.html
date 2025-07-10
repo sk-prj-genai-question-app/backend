@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="%s | 관리자 페이지">관리자</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; display: flex; }
+        .sidebar { width: 200px; background-color: #f4f4f4; padding: 20px; height: 100vh; box-shadow: 2px 0 5px rgba(0,0,0,0.1); }
+        .sidebar h2 { margin-top: 0; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar ul li { margin-bottom: 10px; }
+        .sidebar ul li a { text-decoration: none; color: #333; font-weight: bold; }
+        .content { flex-grow: 1; padding: 20px; }
+        .header { background-color: #333; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { margin: 0; font-size: 24px; }
+        .header .logout a { color: white; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>관리자 메뉴</h2>
+        <ul>
+            <li><a th:href="@{/admin/dashboard}">대시보드</a></li>
+            <li><a th:href="@{/admin/users}">사용자 관리</a></li>
+            <li><a th:href="@{/admin/problems}">문제 관리</a></li>
+            <li><a th:href="@{/admin/answer-records}">답변 기록 관리</a></li>
+            <!-- 추가적인 엔티티 관리 링크를 여기에 추가할 수 있습니다. -->
+        </ul>
+    </div>
+    <div class="content">
+        <div class="header">
+            <h1 layout:fragment="header-title"></h1>
+            <div class="logout">
+                <a th:href="@{/logout}">로그아웃</a>
+            </div>
+        </div>
+        <div layout:fragment="content">
+            <!-- 각 페이지의 내용이 여기에 삽입됩니다. -->
+        </div>
+    </div>
+</body>
+</html>

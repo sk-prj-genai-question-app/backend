@@ -1,5 +1,7 @@
 package com.rookies3.genaiquestionapp.problem.service;
 
+import com.rookies3.genaiquestionapp.exception.BusinessException;
+import com.rookies3.genaiquestionapp.exception.ErrorCode;
 import com.rookies3.genaiquestionapp.problem.controller.dto.ProblemDto;
 import com.rookies3.genaiquestionapp.record.controller.dto.AnswerRecordDto;
 import com.rookies3.genaiquestionapp.problem.entity.Choice;
@@ -64,7 +66,7 @@ public class ProblemService {
     @Transactional(readOnly = true)
     public ProblemDto.ProblemDetailResponse getProblemById(Long id) {
         Problem problem = problemRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Problem not found with id: " + id));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PROBLEM_NOT_FOUND));
         return ProblemDto.ProblemDetailResponse.fromEntity(problem);
     }
 
@@ -112,7 +114,7 @@ public class ProblemService {
         List<AnswerRecordDto.AnalysisResponse> analysisResults = answerRecordService.analyzeUserPerformance(userId);
 
         if (analysisResults.isEmpty()) {
-            throw new IllegalStateException("사용자의 문제 풀이 기록이 없어 취약점을 분석할 수 없습니다.");
+            throw new BusinessException(ErrorCode.USER_RECORD_NOT_FOUND);
         }
 
         String targetLevel = null;
@@ -143,7 +145,7 @@ public class ProblemService {
         try {
             aiGeneratedProblemData = callPythonAiProblemGenerator(targetLevel, targetProblemType);
         } catch (Exception e) {
-            throw new RuntimeException("AI 문제 생성 서버 호출 중 오류가 발생했습니다: " + e.getMessage(), e);
+            throw new BusinessException(ErrorCode.AI_SERVER_COMMUNICATION_ERROR, e.getMessage());
         }
 
         Problem problemToSave = Problem.builder()
@@ -179,7 +181,7 @@ public class ProblemService {
             case "V", "G", "R" -> normalizedProblemType; // DB 값이 Python이 기대하는 값과 동일
             default -> {
                 System.err.println("Unsupported problem type received from analysis (DB value): '" + problemType + "' (normalized: '" + normalizedProblemType + "')");
-                throw new IllegalArgumentException("지원하지 않는 문제 유형입니다: " + problemType);
+                throw new BusinessException(ErrorCode.INVALID_PROBLEM_TYPE, problemType);
             }
         };
         ProblemDto.WeaknessBasedProblemGenerateRequest aiRequest = ProblemDto.WeaknessBasedProblemGenerateRequest.builder()
@@ -202,15 +204,15 @@ public class ProblemService {
             if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
                 return responseEntity.getBody();
             } else {
-                String errorMessage = "AI 문제 생성 서버 호출 실패: HTTP Status " + responseEntity.getStatusCode() + ", Response Body: " + responseEntity.getBody();
+                String errorMessage = "HTTP Status " + responseEntity.getStatusCode() + ", Response Body: " + responseEntity.getBody();
                 // Logger 사용 권장
                 // log.error(errorMessage);
-                throw new RuntimeException(errorMessage);
+                throw new BusinessException(ErrorCode.AI_SERVER_COMMUNICATION_ERROR, errorMessage);
             }
         } catch (org.springframework.web.client.RestClientException e) {
             // Logger 사용 권장
             // log.error("HTTP 요청 중 오류 발생: " + e.getMessage(), e);
-            throw new RuntimeException("AI 문제 생성 서버와 통신 중 오류: " + e.getMessage(), e);
+            throw new BusinessException(ErrorCode.AI_SERVER_COMMUNICATION_ERROR, e.getMessage());
         }
     }
 }

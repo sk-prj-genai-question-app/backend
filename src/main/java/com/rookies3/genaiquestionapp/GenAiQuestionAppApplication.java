@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.web.client.RestTemplate;
 
+@EnableJpaAuditing
 @SpringBootApplication
 @EnableJpaAuditing
 public class GenAiQuestionAppApplication {
@@ -16,9 +17,4 @@ public class GenAiQuestionAppApplication {
 		dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
 		SpringApplication.run(GenAiQuestionAppApplication.class, args);
 		}
-
-		@Bean
-		public RestTemplate restTemplate() {
-			return new RestTemplate();
-	}
 }

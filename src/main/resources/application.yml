@@ -2,10 +2,10 @@ spring:
   application:
     name: GenAiQuestionApp
   profiles:
-    active: test # 현재 활성화된 환경 (개발: test || 운영: prod)
+    active: test # 현재 활성화된 환경 - 개발 환경에 따라 수정하세요
 devtools:
   restart:
-    enabled: true
+    enabled: true # 기본 true
 server:
   port: 8080 # 애플리케이션 포트 설정, 기본은 8080
   address: 0.0.0.0 # 모든 IP 주소에서 접근 허용
@@ -21,3 +21,6 @@ ai:
   problem:
     generator:
       url: http://127.0.0.1:8000/problems/generate
+python:
+  ai-service:
+    url: http://localhost:8000

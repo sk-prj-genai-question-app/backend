@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableJpaAuditing
 @SpringBootApplication
+@EnableJpaAuditing
 public class GenAiQuestionAppApplication {
 
 	public static void main(String[] args) {

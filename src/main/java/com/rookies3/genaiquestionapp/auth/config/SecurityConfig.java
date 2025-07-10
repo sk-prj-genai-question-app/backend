@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/answer-record/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 권한 설정
                         // jwt 토큰이 없으면 접근 불가능
-                        .requestMatchers("/auth/me/information", "/auth/signout" ).authenticated()
+                        .requestMatchers("/auth/me/information", "/auth/signout").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

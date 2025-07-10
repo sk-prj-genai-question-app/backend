@@ -1,7 +1,7 @@
-package com.rookies3.genaiquestionapp.user_question.controller.dto;
+package com.rookies3.genaiquestionapp.userquestion.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.rookies3.genaiquestionapp.user_question.entity.UserQuestion;
+import com.rookies3.genaiquestionapp.userquestion.entity.UserQuestion;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

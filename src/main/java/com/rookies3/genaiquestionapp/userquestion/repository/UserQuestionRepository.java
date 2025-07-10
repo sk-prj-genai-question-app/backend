@@ -1,6 +1,6 @@
-package com.rookies3.genaiquestionapp.user_question.repository;
+package com.rookies3.genaiquestionapp.userquestion.repository;
 
-import com.rookies3.genaiquestionapp.user_question.entity.UserQuestion;
+import com.rookies3.genaiquestionapp.userquestion.entity.UserQuestion;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,8 @@
-package com.rookies3.genaiquestionapp.user_question.entity;
+package com.rookies3.genaiquestionapp.userquestion.entity;
 
 import com.rookies3.genaiquestionapp.auth.entity.User;
 import com.rookies3.genaiquestionapp.entity.BaseEntity;
 import com.rookies3.genaiquestionapp.problem.entity.Problem;
-import com.rookies3.genaiquestionapp.record.entity.AnswerRecord;
 import jakarta.persistence.*;
 import lombok.*;
 

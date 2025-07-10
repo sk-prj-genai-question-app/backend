@@ -1,4 +1,4 @@
-package com.rookies3.genaiquestionapp.user_question.service;
+package com.rookies3.genaiquestionapp.userquestion.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,11 +1,8 @@
-package com.rookies3.genaiquestionapp.user_question.entity;
+package com.rookies3.genaiquestionapp.userquestion.entity;
 
 import com.rookies3.genaiquestionapp.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter

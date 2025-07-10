@@ -46,14 +46,19 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .formLogin(AbstractHttpConfigurer::disable)
+                .formLogin(form -> form
+                        .loginPage("/admin/login")
+                        .defaultSuccessUrl("/admin/dashboard", true)
+                        .permitAll()
+                )
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         // jwt 토큰 없이 접근 가능
-                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh","/h2-console/**").permitAll()
+                        .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh","/h2-console/**", "/admin/login").permitAll()
                         .requestMatchers("/api/problems/**").permitAll() // 일단 임시 접근 가능
                         .requestMatchers("/api/answer-record/**").authenticated()
+                        .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 권한 설정
                         // jwt 토큰이 없으면 접근 불가능
                         .requestMatchers("/auth/me/information", "/auth/signout" ).authenticated()
                         .anyRequest().authenticated()

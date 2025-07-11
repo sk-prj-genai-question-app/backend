@@ -20,7 +20,7 @@ cors:
 ai:
   problem:
     generator:
-      url: http://127.0.0.1:8000/problems/generate
+      url: http://ai-service:8000/problems/generate
 python:
   ai-service:
-    url: http://localhost:8000
+    url: http://ai-service:8000

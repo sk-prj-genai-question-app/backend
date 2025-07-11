@@ -42,7 +42,7 @@ public class AiService {
 
         try {
             ResponseEntity<Map<String, Object>> response = restTemplate.exchange(
-                    "http://localhost:8000/chatbot",
+                    "http://ai-service:8000/chatbot",
                     HttpMethod.POST,
                     entity,
                     new ParameterizedTypeReference<Map<String, Object>>() {}

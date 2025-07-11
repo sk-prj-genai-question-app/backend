@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api/answer-record")
+@RequestMapping("/answer-record")
 @RequiredArgsConstructor
 public class AnswerRecordController {
     private final AnswerRecordService answerRecordService;

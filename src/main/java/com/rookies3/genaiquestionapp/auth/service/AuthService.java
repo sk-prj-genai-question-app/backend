@@ -30,7 +30,7 @@ public class AuthService {
     private final CustomUserDetailsService customUserDetailsService;
 
 
-    // 회원가입
+    // 사용자 회원 가입
     public SignupDto.Response register(SignupDto.Request request) {
 
         String email = request.getEmail();

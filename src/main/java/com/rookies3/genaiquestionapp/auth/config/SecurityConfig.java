@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // jwt 토큰 없이 접근 가능
                         .requestMatchers("/auth/signup", "/auth/signin", "/auth/refresh","/h2-console/**", "/admin/login").permitAll()
-                        .requestMatchers("/api/problems/**").permitAll() // 일단 임시 접근 가능
+                        .requestMatchers("/api/problems/**", "/problems/**").permitAll() // 일단 임시 접근 가능
                         .requestMatchers("/api/answer-record/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN") // 관리자 페이지 접근 권한 설정
                         // jwt 토큰이 없으면 접근 불가능

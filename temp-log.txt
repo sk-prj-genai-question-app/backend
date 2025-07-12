@@ -1,0 +1,58 @@
+Run ./gradlew build
+
+Welcome to Gradle 8.14.2!
+
+Here are the highlights of this release:
+ - Java 24 support
+ - GraalVM Native Image toolchain selection
+ - Enhancements to test reporting
+ - Build Authoring improvements
+
+For more details see https://docs.gradle.org/8.14.2/release-notes.html
+
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+/home/runner/work/backend/backend/src/main/java/com/rookies3/genaiquestionapp/problem/controller/dto/ProblemDto.java:120: warning: @Builder will ignore the initializing expression entirely. If you want the initializing expression to serve as default, add @Builder.Default. If it is not supposed to be settable during building, make the field final.
+        private LocalDateTime timestamp = LocalDateTime.now();
+> Task :compileJava
+                              ^
+1 warning
+
+> Task :processResources
+> Task :classes
+> Task :resolveMainClassName
+> Task :bootJar
+> Task :jar
+> Task :assemble
+> Task :compileTestJava
+> Task :processTestResources NO-SOURCE
+> Task :testClasses
+
+> Task :test
+
+GenAiQuestionAppApplicationTests > contextLoads() FAILED
+    java.lang.IllegalStateException at DefaultCacheAwareContextLoaderDelegate.java:180
+        Caused by: org.springframework.beans.factory.BeanCreationException at AbstractBeanFactory.java:328
+            Caused by: org.springframework.beans.factory.BeanCreationException at AbstractAutowireCapableBeanFactory.java:1826
+                Caused by: org.flywaydb.core.internal.exception.FlywayMigrateException at DbMigrate.java:399
+                    Caused by: org.flywaydb.core.internal.sqlscript.FlywaySqlScriptException at DefaultSqlScriptExecutor.java:256
+                        Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException at DbException.java:514
+
+1 test completed, 1 failed
+
+> Task :test FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':test'.
+> There were failing tests. See the report at: file:///home/runner/work/backend/backend/build/reports/tests/test/index.html
+
+* Try:
+
+[Incubating] Problems report is available at: file:///home/runner/work/backend/backend/build/reports/problems/problems-report.html
+> Run with --scan to get full insights.
+
+BUILD FAILED in 25s
+7 actionable tasks: 7 executed
+Error: Process completed with exit code 1.

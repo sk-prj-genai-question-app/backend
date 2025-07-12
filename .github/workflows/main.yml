@@ -9,7 +9,7 @@ on:
 
 env:
   DOCKER_IMAGE: backend
-  DOCKER_TAG: 0.4
+  DOCKER_TAG: 0.5
 
 jobs:
   build:

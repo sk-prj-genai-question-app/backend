@@ -27,7 +27,7 @@ public class UserQuestion extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_records", nullable = false)
+    @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
 
     @Builder.Default

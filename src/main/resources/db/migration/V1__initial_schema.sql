@@ -36,7 +36,7 @@ CREATE TABLE `users` (
 CREATE TABLE `user_questions` (
     `id` BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_id` BIGINT NOT NULL,
-    `answer_records` BIGINT NOT NULL,
+    `problem_id` BIGINT NOT NULL,
     `created_at` TIMESTAMP NULL,
     `updated_at` TIMESTAMP NULL
 );

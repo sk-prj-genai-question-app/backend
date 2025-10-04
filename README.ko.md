@@ -5,7 +5,7 @@
 # 📚 JLPT 문제 생성 학습 도우미 - 백엔드
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/user/repo/actions)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg](./LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Java](https://img.shields.io/badge/Java-17-blue.svg)](#-tech-stack)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.7-brightgreen.svg)](#-tech-stack)
 
